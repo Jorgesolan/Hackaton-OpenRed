@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRed</title>
+    <!-- Include Mapbox and deck.gl CDN -->
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/deck.gl@latest/dist.min.js"></script>
+    <!-- noUiSlider CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.css"
+        integrity="sha512-MKxcSu/LDtbIYHBNAWUQwfB3iVoG9xeMCm32QV5hZ/9lFaQZJVaXfz9aFa0IZExWzCpm7OWvp9zq9gVip/nLMg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.8.1/nouislider.min.js"
+        integrity="sha512-g/feAizmeiVKSwvfW0Xk3ZHZqv5Zs8PEXEBKzL15pM0SevEvoX8eJ4yFWbqakvRj7vtw1Q97bLzEpG2IVWX0Mg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Bootstrap 5 CSS -->
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link rel="stylesheet" href="{% static 'frontend/css/styles.css' %}" />
+    <script src="{% static 'frontend/js/map.js' %}"></script>
+    <script>
+        // Define the variables dynamically in the HTML template
+        window.MAPBOX_ACCESS_TOKEN = "{{ mapbox_token }}";
+        window.csrfToken = "{{ csrf_token }}";
+    </script>
+
+
+</head>
+
+<body class="vh-100 vw-100">
+    <!-- Datetime Range Slider Control -->
+    <div id="slider-container" class="bg-light p-3">
+        <h5>Seleccionar rango de fechas</h5>
+        <div id="slider" class="slider"></div>
+        <div id="slider-value">
+            De: <span id="start-value" class="small"></span><br />
+            A: <span id="end-value" class="small"></span>
+        </div>
+        <h5>Seleccionar intensidad</h5>
+        <div id="slider-intensity" class="slider"></div>
+        <div style='display:flex; justify-content: space-between;'>
+            De: <input type="number" id="intensityStartInput" value="0" min="0" max="1000" 
+                         class="form-control d-inline w-20" style='margin-right:5'>  
+            A: <input type="number" id="intensityEndInput" value="1000" min="0" max="1000" 
+                       class="form-control d-inline w-20">
+        </div>        
+        <!-- From:<span id="intensity-start-value" class="small"></span><br />
+        To:<span id="intensity-end-value" class="small"></span> -->
+        <h5>Select Region</h5>
+        <div style='display:flex; justify-content: space-between;'>
+            Lat: <input type="number" id="latMinInput" step="0.0001" class="form-control d-inline w-25  mr-1" style="flex-grow:1">
+            - <input type="number" id="latMaxInput" step="0.0001" class="form-control d-inline w-25" style="flex-grow:1">
+        </div>
+        <div style='display:flex; justify-content: space-between;'>
+            Lon: <input type="number" id="lonMinInput" step="0.0001" class="form-control d-inline w-25  mr-1" style="flex-grow:1">
+            - <input type="number" id="lonMaxInput" step="0.0001" class="form-control d-inline w-25" style="flex-grow:1">
+        </div>
+        <br>
+        <button id="updateMap" class="btn btn-secondary">Update Map</button>
+        <button id="downloadCSV" class="btn btn-primary">Download CSV</button>
+
+    </div>
+    </div>
+    <!-- Popup to display on hover -->
+    <div id="popup"
+        style="position: absolute; display: block; background: white; padding: 5px; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); z-index: 100;">
+        <p id="popup-content"></p>
+    </div>
+    <div id="map-container" class="w-100 h-100 position-relative"></div>
+</body>
+
+</html>
